@@ -1,4 +1,5 @@
-import { Learner } from 'src/learner/learner.module';
+
+import { Learner } from 'src/learner/learner.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany,JoinTable } from 'typeorm';
 
 @Entity()

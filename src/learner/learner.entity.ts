@@ -1,5 +1,6 @@
-import { Courses } from 'src/Courses/courses.module';
-import { Review } from 'src/Review/review.module';
+import { Courses } from 'src/Courses/courses.entity';
+import { Review } from 'src/Review/review.entity';
+
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany } from 'typeorm';
 
 

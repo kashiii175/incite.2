@@ -1,5 +1,6 @@
-import { Courses } from 'src/Courses/courses.module';
-import { Learner } from 'src/learner/learner.module';
+import { Courses } from 'src/Courses/courses.entity';
+import { Learner } from 'src/learner/learner.entity';
+
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany } from 'typeorm';
 
 
