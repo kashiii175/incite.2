@@ -1,6 +1,8 @@
-import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Logger, Param, Post, Put, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Logger, Param, Patch, Post, Put, UsePipes } from "@nestjs/common";
 import { InvalidRequestValidator } from "src/shared/pipes/invalid-request-validator";
 import { LearnerService } from "./learner.service";
+import { UploadFile } from "src/utils/file-uploading.utils";
+import axios from "axios";
 
 
 
@@ -79,15 +81,17 @@ async create(@Body() createduser: CreatedUser) {
   }
   }
 
+
+
+
   @Put(':id')
-@UsePipes(new InvalidRequestValidator())
-@HttpCode(HttpStatus.OK)
-// @UseInterceptors(FileInterceptor('image')) // If you have only one image upload in PUT request
-async update(@Param('id') id: string, @Body() bd: any) {
-  try {
-    let user = await this.learnerService.findOne(id);
-    if (!user) {
-      throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND);
+  @UsePipes(new InvalidRequestValidator())
+  @HttpCode(HttpStatus.OK)
+  async findOneByid(@Param('id') id: string, @Body() bd: any){
+    try{
+    let user= await this.learnerService.findOne(id);
+    if(!user){
+      throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND)
     }
     let img: string = null
 
@@ -112,7 +116,7 @@ async update(@Param('id') id: string, @Body() bd: any) {
       bd.location.address = address;
     }
 
-    const updatedUser = await this.userService.save({ ...user, ...bd });
+    const updatedUser = await this.learnerService.save({ ...user, ...bd });
 
     return {
       success: true,
@@ -124,6 +128,8 @@ async update(@Param('id') id: string, @Body() bd: any) {
   }
 }
 
+
+
+ 
+
 }
-///kmiknkniknksn vk,sn ckscl,sc
-//sk,cmlscm 

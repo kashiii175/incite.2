@@ -9,6 +9,8 @@ import { LearnerController } from './learner/learner.controller';
 import { LearnerService } from './learner/learner.service';
 import { Courses } from './Courses/courses.entity';
 import { Review } from './Review/review.entity';
+import { CourseController } from './Courses/courses.controller';
+import { CourseService } from './Courses/courses.service';
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { Review } from './Review/review.entity';
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()), // Imported once with global config
     TypeOrmModule.forFeature([Learner,Courses,Review]), // Include your entities here
   ],  
-  controllers: [AppController,LearnerController],
-  providers: [AppService,LearnerService],
+  controllers: [AppController,LearnerController,CourseController],
+  providers: [AppService,LearnerService,CourseService],
 })
 export class AppModule {}

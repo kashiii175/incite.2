@@ -40,8 +40,20 @@ export class LearnerService {
 
 
 
-    async findOne(id: string): Promise<Learner> {
-      return await this.userRepository.findOne({ where: { id } /*relations: ['order','order.item']*/ })
+    async findOne(id: string) {
+      console.log(id)
+      let user= await this.userRepository.findOne({ where: {id} })
+      console.log(user);
+      return user
+    }
+    async findOnebyid(id: string) {
+      let user= await this.userRepository.findOneById(id);
+      console.log(user);
+      return user
+    }
+
+    async save(user: Partial<Learner>): Promise<Learner> {
+      return await this.userRepository.save(user);
     }
 }
 //kkdnvknv
