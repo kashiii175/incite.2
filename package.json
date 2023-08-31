@@ -29,7 +29,8 @@
     "postgres": "^3.3.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
