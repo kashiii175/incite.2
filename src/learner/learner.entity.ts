@@ -36,8 +36,8 @@ export class Learner {
   courses: Courses[];
 
 
-  @OneToMany(() => Review, review => review.learner)
-  review: Review[];
+  // @OneToMany(() => Review, review => review.learner)
+  // review: Review[];
 
 
 //kmklmkm

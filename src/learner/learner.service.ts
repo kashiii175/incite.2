@@ -32,5 +32,16 @@ export class LearnerService {
     
       return user;
     }
+
+
+    async findAll(): Promise<Learner[]> {
+      return await this.userRepository.find();
+    }
+
+
+
+    async findOne(id: string): Promise<Learner> {
+      return await this.userRepository.findOne({ where: { id } /*relations: ['order','order.item']*/ })
+    }
 }
 //kkdnvknv

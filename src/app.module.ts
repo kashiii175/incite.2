@@ -7,12 +7,14 @@ import { configService } from './config/config.service';
 import { Learner } from './learner/learner.entity';
 import { LearnerController } from './learner/learner.controller';
 import { LearnerService } from './learner/learner.service';
+import { Courses } from './Courses/courses.entity';
+import { Review } from './Review/review.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()), // Imported once with global config
-    TypeOrmModule.forFeature([Learner]), // Include your entities here
+    TypeOrmModule.forFeature([Learner,Courses,Review]), // Include your entities here
   ],  
   controllers: [AppController,LearnerController],
   providers: [AppService,LearnerService],
