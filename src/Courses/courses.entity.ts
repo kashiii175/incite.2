@@ -19,9 +19,9 @@ export class Courses {
     @Column({ length: 500, nullable: true })
     image: string;
 
-    // @ManyToMany(() => Learner, learner => learner.courses)
-    // @JoinTable()
-    // learner: Learner[];
+    @ManyToMany(() => Learner, learner => learner.courses)
+    //@JoinTable()
+    learner: Learner[];
 
    
   //lsmcl

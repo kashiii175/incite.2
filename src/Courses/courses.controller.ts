@@ -1,6 +1,7 @@
-import { Body, Controller, Logger, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Logger, Param, Post, UsePipes } from "@nestjs/common";
 import { UploadFile } from "src/utils/file-uploading.utils";
 import { CourseService } from "./courses.service";
+import { InvalidRequestValidator } from "src/shared/pipes/invalid-request-validator";
 
 
 export class CreateCourseDto {
@@ -49,4 +50,31 @@ if(createcourseDto?.image)
     throw e;
   }
 }
+
+
+@Get(':id')
+  @UsePipes(new InvalidRequestValidator())
+  @HttpCode(HttpStatus.OK)
+  async findOneBy(@Param('id') id: number){
+    try{
+    let user= await this.courseService.findOne(id);
+    if(!user){
+      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND)
+    }
+    return {
+      success: true,
+      result: user,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
+  }
+
+
+
+
+
+
+
   }

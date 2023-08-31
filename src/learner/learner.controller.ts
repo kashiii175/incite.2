@@ -3,6 +3,7 @@ import { InvalidRequestValidator } from "src/shared/pipes/invalid-request-valida
 import { LearnerService } from "./learner.service";
 import { UploadFile } from "src/utils/file-uploading.utils";
 import axios from "axios";
+import { CourseService } from "src/Courses/courses.service";
 
 
 
@@ -27,6 +28,7 @@ export class CreatedUser {
    
   
     constructor(private readonly learnerService: LearnerService,
+      private readonly courseService: CourseService,
      ) { }
     protected readonly logger = new Logger(this.constructor.name);
   
@@ -128,7 +130,46 @@ async create(@Body() createduser: CreatedUser) {
   }
 }
 
+@Put('addcourse/:id')
+@UsePipes(new InvalidRequestValidator())
+@HttpCode(HttpStatus.OK)
+async update(@Param('id') id: string, @Body() bd: any) {
+  try {
+    let learner = await this.learnerService.findOne(id);
+    
+    if (!learner) {
+      throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND);
+    }
 
+    if (bd.courseId) {
+      // Load the existing courses
+      const existingCourses = learner.courses || [];
+      console.log(existingCourses)
+
+      // Load the new course based on the provided courseId
+      const newCourse = await this.courseService.findOne(bd.courseId);
+
+      if (newCourse) {
+        //console.log(existingCourses)
+        // Add the new course to the existing courses
+        learner.courses = [...existingCourses, newCourse];
+      } else {
+        throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND);
+      }
+    }
+
+    // Save the updated learner entity
+    const updatedLearner = await this.learnerService.save(learner);
+
+    return {
+      success: true,
+      result: updatedLearner,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
+}
 
  
 
