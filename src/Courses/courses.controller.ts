@@ -72,6 +72,14 @@ if(createcourseDto?.image)
   }
 
 
+  @Get()
+  async findAll() {
+    let courses= await this.courseService.findAll();
+    return {
+      success: true,
+      result: courses,
+    };
+  }
 
 
 

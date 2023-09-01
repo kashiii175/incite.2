@@ -130,33 +130,35 @@ async create(@Body() createduser: CreatedUser) {
   }
 }
 
-@Put('addcourse/:id')
+@Post('addcourse/:id')
 @UsePipes(new InvalidRequestValidator())
 @HttpCode(HttpStatus.OK)
-async update(@Param('id') id: string, @Body() bd: any) {
+async addCourse(@Param('id') id: string, @Body() bd: any) {
   try {
-    let learner = await this.learnerService.findOne(id);
-    
+    // Load the learner
+    const learner = await this.learnerService.findOne(id);
+
     if (!learner) {
       throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND);
     }
 
-    if (bd.courseId) {
-      // Load the existing courses
-      const existingCourses = learner.courses || [];
-      console.log(existingCourses)
+    // Load the new course
+    const newCourse = await this.courseService.findOne(bd.courseId);
 
-      // Load the new course based on the provided courseId
-      const newCourse = await this.courseService.findOne(bd.courseId);
-
-      if (newCourse) {
-        //console.log(existingCourses)
-        // Add the new course to the existing courses
-        learner.courses = [...existingCourses, newCourse];
-      } else {
-        throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND);
-      }
+    if (!newCourse) {
+      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND);
     }
+console.log(learner.courses)
+    // Check if the learner has courses
+    if (!learner.courses) {
+      learner.courses = [];
+    }
+ // Check if the course is already added
+ if (learner.courses.includes(newCourse)) {
+  throw new HttpException(`Course already added`, HttpStatus.BAD_REQUEST);
+}
+    // Add the new course to the learner's courses
+    learner.courses.unshift(newCourse);
 
     // Save the updated learner entity
     const updatedLearner = await this.learnerService.save(learner);
@@ -170,7 +172,5 @@ async update(@Param('id') id: string, @Body() bd: any) {
     throw e;
   }
 }
-
- 
 
 }

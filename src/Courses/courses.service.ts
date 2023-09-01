@@ -26,10 +26,12 @@ export class CourseService {
         return await this.courseRepository.find();
       }
       async findOne(id: number) {
-        console.log(id)
+        
         let user= await this.courseRepository.findOne({ where: {id} })
-        console.log(user);
+       
         return user
       }
+
+    
 
     }
