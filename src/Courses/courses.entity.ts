@@ -4,23 +4,23 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToM
 
 @Entity()
 export class Courses {
-    @PrimaryColumn()
-    public id: string;
+    @PrimaryGeneratedColumn()
+    public id: number;
 
     @Column({ length: 500 })
    name: string;
 
-    @Column({ length: 500 })
+    @Column({ length: 500,nullable: true  })
     rating: string;
 
-    @Column({ length: 500 })
+    @Column({ length: 500,nullable: true  })
     videos: string;
 
     @Column({ length: 500, nullable: true })
     image: string;
 
     @ManyToMany(() => Learner, learner => learner.courses)
-    @JoinTable()
+    //@JoinTable()
     learner: Learner[];
 
    

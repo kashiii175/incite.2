@@ -1,6 +1,9 @@
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Logger, Param, Patch, Post, Put, UsePipes } from "@nestjs/common";
 import { InvalidRequestValidator } from "src/shared/pipes/invalid-request-validator";
 import { LearnerService } from "./learner.service";
+import { UploadFile } from "src/utils/file-uploading.utils";
+import axios from "axios";
+import { CourseService } from "src/Courses/courses.service";
 
 
 
@@ -20,11 +23,12 @@ export class CreatedUser {
   }
   
   
-  @Controller('User')
+  @Controller('Learner')
   export class LearnerController {
    
   
     constructor(private readonly learnerService: LearnerService,
+      private readonly courseService: CourseService,
      ) { }
     protected readonly logger = new Logger(this.constructor.name);
   
@@ -53,6 +57,120 @@ async create(@Body() createduser: CreatedUser) {
   throw e;
 }
 }
+
+@Get()
+  async findAll() {
+    return await this.learnerService.findAll();
+  }
+
+
+  @Get(':id')
+  @UsePipes(new InvalidRequestValidator())
+  @HttpCode(HttpStatus.OK)
+  async findOneBy(@Param('id') id: string){
+    try{
+    let user= await this.learnerService.findOne(id);
+    if(!user){
+      throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND)
+    }
+    return {
+      success: true,
+      result: user,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
+  }
+
+
+
+
+  @Put(':id')
+  @UsePipes(new InvalidRequestValidator())
+  @HttpCode(HttpStatus.OK)
+  async findOneByid(@Param('id') id: string, @Body() bd: any){
+    try{
+    let user= await this.learnerService.findOne(id);
+    if(!user){
+      throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND)
+    }
+    let img: string = null
+
+    if (bd?.file)
+    {
+         img=await UploadFile(bd.file);
+    }
+    // Save the updated user entity
+    console.log(img);
+    if(img)
+    {user.image=img
+    }
+    if (bd.location?.latitude && bd.location?.longitude) {
+      const { latitude, longitude } = bd.location;
+
+      const nominatimResponse = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      );
+
+      const address = nominatimResponse.data.display_name;
+
+      bd.location.address = address;
+    }
+
+    const updatedUser = await this.learnerService.save({ ...user, ...bd });
+
+    return {
+      success: true,
+      result: updatedUser,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
 }
-///kmiknkniknksn vk,sn ckscl,sc
-//sk,cmlscm 
+
+@Post('addcourse/:id')
+@UsePipes(new InvalidRequestValidator())
+@HttpCode(HttpStatus.OK)
+async addCourse(@Param('id') id: string, @Body() bd: any) {
+  try {
+    // Load the learner
+    const learner = await this.learnerService.findOne(id);
+
+    if (!learner) {
+      throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND);
+    }
+
+    // Load the new course
+    const newCourse = await this.courseService.findOne(bd.courseId);
+
+    if (!newCourse) {
+      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND);
+    }
+console.log(learner.courses)
+    // Check if the learner has courses
+    if (!learner.courses) {
+      learner.courses = [];
+    }
+ // Check if the course is already added
+ if (learner.courses.includes(newCourse)) {
+  throw new HttpException(`Course already added`, HttpStatus.BAD_REQUEST);
+}
+    // Add the new course to the learner's courses
+    learner.courses.unshift(newCourse);
+
+    // Save the updated learner entity
+    const updatedLearner = await this.learnerService.save(learner);
+
+    return {
+      success: true,
+      result: updatedLearner,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
+}
+
+}

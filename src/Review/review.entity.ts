@@ -16,9 +16,9 @@ export class Review {
     @Column({ length: 500 })
     comment: string;
 
-    @ManyToOne(() => Learner, learner => learner.review)
-    @JoinColumn({ name: 'Learner' })
-    learner: Learner;
+    // @ManyToOne(() => Learner, learner => learner.review)
+    // @JoinColumn({ name: 'Learner' })
+    // learner: Learner;
 
 
 }

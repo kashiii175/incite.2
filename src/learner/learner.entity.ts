@@ -1,7 +1,7 @@
 import { Courses } from 'src/Courses/courses.entity';
 import { Review } from 'src/Review/review.entity';
 
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany, JoinTable } from 'typeorm';
 
 
 
@@ -32,12 +32,12 @@ export class Learner {
     }
 
     @ManyToMany(() => Courses, courses => courses.learner)
-  
+    @JoinTable()
   courses: Courses[];
 
 
-  @OneToMany(() => Review, review => review.learner)
-  review: Review[];
+  // @OneToMany(() => Review, review => review.learner)
+  // review: Review[];
 
 
 //kmklmkm
