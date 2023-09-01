@@ -31,9 +31,9 @@ export class Teacher {
         latitude: string;
     }
 
-    // @OneToMany(() => Courses, courses => courses.teacher)
+    @OneToMany(() => Courses, courses => courses.teacher)
    
-    // courses: Courses[];
+    courses: Courses[];
 
 
   // @OneToMany(() => Review, review => review.learner)

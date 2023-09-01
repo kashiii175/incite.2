@@ -24,9 +24,9 @@ export class Courses {
     //@JoinTable()
     learner: Learner[];
 
-    // @ManyToOne(type => Teacher, teacher => teacher.courses)
-    // @JoinColumn({ name: 'Teacher' })
-    // teacher: Teacher;
+    @ManyToOne(type => Teacher, teacher => teacher.courses)
+    @JoinColumn({ name: 'Teacher' })
+    teacher: Teacher;
   
   //lsmcl
 

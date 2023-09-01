@@ -49,7 +49,7 @@ class ConfigService {
 
 
             ssl: true,
-            synchronize: true,
+            //synchronize: true,
             autoLoadEntities: true,
            // logging: true,
 
