@@ -1,5 +1,6 @@
 
 import { Learner } from 'src/learner/learner.entity';
+import { Teacher } from 'src/teacher/teacher.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany,JoinTable } from 'typeorm';
 
 @Entity()
@@ -23,7 +24,10 @@ export class Courses {
     //@JoinTable()
     learner: Learner[];
 
-   
+    @ManyToOne(type => Teacher, teacher => teacher.courses)
+    @JoinColumn({ name: 'Teacher' })
+    teacher: Teacher;
+  
   //lsmcl
 
     
