@@ -14,14 +14,20 @@ import { CourseService } from './Courses/courses.service';
 import { Teacher } from './teacher/teacher.entity';
 import { TeacherController } from './teacher/teacher.controller';
 import { TeacherService } from './teacher/teacher.service';
+import { Organization } from './organization/organization.entity';
+import { OrganizationController } from './organization/organization.controller';
+import { OrganizationService } from './organization/organization.service';
+import { Event } from './event/event.entity';
+import { EventController } from './event/event.controller';
+import { EventService } from './event/event.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()), // Imported once with global config
-    TypeOrmModule.forFeature([Learner,Courses,Review,Teacher]), // Include your entities here
+    TypeOrmModule.forFeature([Learner,Courses,Review,Teacher,Organization,Event]), // Include your entities here
   ],  
-  controllers: [AppController,LearnerController,CourseController,TeacherController],
-  providers: [AppService,LearnerService,CourseService,TeacherService],
+  controllers: [AppController,LearnerController,CourseController,TeacherController,OrganizationController,EventController],
+  providers: [AppService,LearnerService,CourseService,TeacherService,OrganizationService,EventService],
 })
 export class AppModule {}

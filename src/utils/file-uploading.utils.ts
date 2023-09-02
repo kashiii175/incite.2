@@ -15,3 +15,12 @@ export const UploadFile = async  (samplefile: string) => {
     });
   return img.secure_url
 }
+export const UploadVideo = async (samplefile: string) => {
+  // console.log("sample video", samplefile);
+
+  const video = await cloudinary.v2.uploader.upload(samplefile
+    , {
+      resource_type: 'video', // Set the resource type to 'video' for video uploads
+    });
+  return video.secure_url;
+}

@@ -32,6 +32,9 @@ export class CourseService {
         return user
       }
 
+      async save(user: Partial<Courses>): Promise<Courses> {
+        return await this.courseRepository.save(user);
+      }
     
 
     }

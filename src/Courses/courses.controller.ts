@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Logger, Param, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Logger, Param, Post, Put, UsePipes } from "@nestjs/common";
 import { UploadFile } from "src/utils/file-uploading.utils";
 import { CourseService } from "./courses.service";
 import { InvalidRequestValidator } from "src/shared/pipes/invalid-request-validator";
@@ -8,7 +8,7 @@ export class CreateCourseDto {
     id:number
    name: string;
     rating: string;
-    videos: string;
+    videos: string[];
     image: string;
   }
   
@@ -81,8 +81,47 @@ if(createcourseDto?.image)
     };
   }
 
+  @Put(':id')
+  @UsePipes(new InvalidRequestValidator())
+  @HttpCode(HttpStatus.OK)
+  async findOneByid(@Param('id') id: number, @Body() bd: any){
+    try{
+    let user= await this.courseService.findOne(id);
+    if(!user){
+      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND)
+    }
+    let img: string = null
 
+    if (bd?.file)
+    {
+         img=await UploadFile(bd.file);
+    }
+    // Save the updated user entity
+    console.log(img);
+    if(img)
+    {
+      user.image=img;
+      if (!user.videos) {
+        user.videos = [];
+      }
 
+      if (bd.videos) {
+        user.videos.push(bd.videos);
+      } else {
+        // do nothing
+      }
+    }
 
+    const updatedUser = await this.courseService.save({ ...user, ...bd });
+
+    return {
+      success: true,
+      result: updatedUser,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
+}
 
   }
