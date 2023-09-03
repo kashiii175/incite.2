@@ -82,37 +82,42 @@ if(createcourseDto?.image)
   }
 
   @Put(':id')
-  @UsePipes(new InvalidRequestValidator())
-  @HttpCode(HttpStatus.OK)
-  async findOneByid(@Param('id') id: number, @Body() bd: any){
-    try{
-    let user= await this.courseService.findOne(id);
-    if(!user){
-      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND)
+@UsePipes(new InvalidRequestValidator())
+@HttpCode(HttpStatus.OK)
+async findOneByid(@Param('id') id: number, @Body() bd: any) {
+  try {
+    let user = await this.courseService.findOne(id);
+    console.log(user);
+    console.log(bd.videos)
+    if (!user) {
+      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND);
     }
-    let img: string = null
+    let img: string = null;
 
-    if (bd?.file)
-    {
-         img=await UploadFile(bd.file);
+    if (bd?.file) {
+      img = await UploadFile(bd.file);
     }
     // Save the updated user entity
     console.log(img);
-    if(img)
-    {
-      user.image=img;
+    if (img) {
+      user.image = img;
+    }
       if (!user.videos) {
         user.videos = [];
       }
+console.log(bd.videos)
+console.log("dvndjvndjvn")
+if (bd.videos) {
+  // Parse the videos string into an array
+  let newVideos = JSON.parse(bd.videos);
+  if (Array.isArray(newVideos)) {
+    // Concatenate the new videos with the existing ones
+    user.videos = user.videos.concat(newVideos);
+  }
+} // else: do nothing
 
-      if (bd.videos) {
-        user.videos.push(bd.videos);
-      } else {
-        // do nothing
-      }
-    }
 
-    const updatedUser = await this.courseService.save({ ...user, ...bd });
+    const updatedUser = await this.courseService.save(user);
 
     return {
       success: true,
@@ -124,4 +129,33 @@ if(createcourseDto?.image)
   }
 }
 
+@Post('courses/:id/add-videos')
+  async addVideosToCourse(@Param('id') id: number, @Body() videoData: { videos: string[] }) {
+    const course = await this.courseService.findOne(id);
+    if (!course) {
+      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND);
+    }
+
+    let existingVideos = [];
+
+    // Check if the 'videos' property exists on the 'course' object
+    if (course.videos) {
+      // If it does, set the 'existingVideos' variable to the value of the 'videos' property
+      existingVideos = course.videos;
+    }
+
+    // Add the new videos to the copy of the existing videos array
+    existingVideos.push(...videoData.videos);
+
+    // Set the 'videos' property to the copy of the existing videos array
+    course.videos = existingVideos;
+
+    // Save the updated course entity
+    const updatedCourse = await this.courseService.save(course);
+
+    return {
+      success: true,
+      result: updatedCourse,
+    };
   }
+}

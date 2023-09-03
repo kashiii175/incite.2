@@ -4,6 +4,7 @@ import { LearnerService } from "./learner.service";
 import { UploadFile } from "src/utils/file-uploading.utils";
 import axios from "axios";
 import { CourseService } from "src/Courses/courses.service";
+import { EventService } from "src/event/event.service";
 
 
 
@@ -28,6 +29,7 @@ export class CreatedUser {
    
   
     constructor(private readonly learnerService: LearnerService,
+      private readonly eventService: EventService,
       private readonly courseService: CourseService,
      ) { }
     protected readonly logger = new Logger(this.constructor.name);
@@ -172,5 +174,50 @@ console.log(learner.courses)
     throw e;
   }
 }
+
+@Post('add/event/:id')
+@UsePipes(new InvalidRequestValidator())
+@HttpCode(HttpStatus.OK)
+async addevent(@Param('id') id: string, @Body() bd: any) {
+  try {
+    // Load the learner
+    const learner = await this.learnerService.findOne(id);
+
+    if (!learner) {
+      throw new HttpException(`Learner not found`, HttpStatus.NOT_FOUND);
+    }
+
+    // Load the new course
+    const newEvent = await this.eventService.findOne(bd.eventId);
+
+    if (!newEvent) {
+      throw new HttpException(`Event not found`, HttpStatus.NOT_FOUND);
+    }
+console.log(learner.events)
+    // Check if the learner has courses
+    if (!learner.events) {
+      learner.events = [];
+    }
+//  Check if the course is already added
+ if (learner.events.includes(newEvent)) {
+  throw new HttpException(`Course already added`, HttpStatus.BAD_REQUEST);
+}
+    // Add the new course to the learner's courses
+    learner.events.unshift(newEvent);
+
+    // Save the updated learner entity
+    const updatedLearner = await this.learnerService.save(learner);
+
+    return {
+      success: true,
+      result: updatedLearner,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
+}
+
+
 
 }
