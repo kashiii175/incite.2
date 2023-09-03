@@ -24,7 +24,7 @@ export class EventService {
         return createdreview;
       }
       async findAll(): Promise<Event[]> {
-        return await this.eventRepository.find();
+        return await this.eventRepository.find({relations:["organization"]});
       }
       async findOne(id: number) {
         
