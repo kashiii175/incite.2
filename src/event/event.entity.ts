@@ -20,6 +20,8 @@ export class Event {
 
     @Column({ length: 500, nullable: true })
     image: string;
+    @Column({ nullable: true })
+    learnersCount:number;
 
     // @ManyToMany(() => Learner, learner => learner.courses)
     // //@JoinTable()

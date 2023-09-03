@@ -72,9 +72,30 @@ if(createcourseDto?.image)
   }
 
 
+  // @Get()
+  // async findAll() {
+  //   let courses= await this.courseService.findAlll();
+  //   return {
+  //     success: true,
+  //     result: courses,
+  //   };
+  // }
+
+
+
+
+
+
   @Get()
-  async findAll() {
-    let courses= await this.courseService.findAll();
+  async findAlll() {
+    const courses = await this.courseService.findAllll();
+
+    for (const course of courses) {
+      const learnersCount = course.learner.length;
+
+      course.learnersCount = learnersCount;
+    }
+
     return {
       success: true,
       result: courses,

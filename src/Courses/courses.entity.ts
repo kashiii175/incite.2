@@ -20,6 +20,12 @@ export class Courses {
     @Column({ length: 500, nullable: true })
     image: string;
 
+   @Column({ nullable: true })
+    learnersCount:number;
+
+    @Column({ length: 500, nullable: true })
+    level: string;
+
     @ManyToMany(() => Learner, learner => learner.courses)
     //@JoinTable()
     learner: Learner[];

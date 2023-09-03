@@ -24,11 +24,11 @@ export class EventService {
         return createdreview;
       }
       async findAll(): Promise<Event[]> {
-        return await this.eventRepository.find({relations:["organization"]});
+        return await this.eventRepository.find({relations:["organization",'learner']});
       }
       async findOne(id: number) {
         
-        let user= await this.eventRepository.findOne({ where: {id},relations:["organization"] })
+        let user= await this.eventRepository.findOne({ where: {id},relations:["organization",'learner'] })
        
         return user
       }

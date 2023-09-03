@@ -86,6 +86,13 @@ if(createeventDto?.image)
   @Get()
   async findAll() {
     let courses= await this.eventService.findAll();
+
+    for (const course of courses) {
+      const learnersCount = course.learner.length;
+
+      course.learnersCount = learnersCount;
+    }
+
     return {
       success: true,
       result: courses,

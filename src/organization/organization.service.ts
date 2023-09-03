@@ -42,7 +42,7 @@ export class OrganizationService {
 
     async findOne(id: string) {
       console.log(id)
-      let user= await this.orgRepository.findOne({ where: {id},})
+      let user= await this.orgRepository.findOne({ where: {id},relations:['event']})
       return user
     }
 
