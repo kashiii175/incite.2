@@ -188,17 +188,17 @@ async addevent(@Param('id') id: string, @Body() bd: any) {
     }
 
     // Load the new course
-    const newEvent = await this.eventService.findOne(bd.courseId);
+    const newEvent = await this.eventService.findOne(bd.eventId);
 
     if (!newEvent) {
       throw new HttpException(`Event not found`, HttpStatus.NOT_FOUND);
     }
 console.log(learner.events)
     // Check if the learner has courses
-    if (!learner.courses) {
-      learner.courses = [];
+    if (!learner.events) {
+      learner.events = [];
     }
- // Check if the course is already added
+//  Check if the course is already added
  if (learner.events.includes(newEvent)) {
   throw new HttpException(`Course already added`, HttpStatus.BAD_REQUEST);
 }

@@ -62,7 +62,7 @@ if(createeventDto?.image)
 }
 
 
-@Get(':id')
+@Get('get/:id')
   @UsePipes(new InvalidRequestValidator())
   @HttpCode(HttpStatus.OK)
   async findOneBy(@Param('id') id: number){

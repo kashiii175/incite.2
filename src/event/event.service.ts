@@ -28,7 +28,7 @@ export class EventService {
       }
       async findOne(id: number) {
         
-        let user= await this.eventRepository.findOne({ where: {id} })
+        let user= await this.eventRepository.findOne({ where: {id},relations:["organization"] })
        
         return user
       }

@@ -42,7 +42,7 @@ export class LearnerService {
 
     async findOne(id: string) {
       console.log(id)
-      let user= await this.userRepository.findOne({ where: {id},relations: ['courses'] })
+      let user= await this.userRepository.findOne({ where: {id},relations: ['courses','events'] })
       return user
     }
     async findOnebyid(id: string) {
