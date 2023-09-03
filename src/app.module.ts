@@ -23,12 +23,13 @@ import { EventService } from './event/event.service';
 import { Admin } from './Admin/admin.entity';
 import { AdminService } from './Admin/admin.service';
 import { AdminController } from './Admin/admin.controller';
+import { Video } from './videos/videos.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()), // Imported once with global config
-    TypeOrmModule.forFeature([Learner,Courses,Review,Teacher,Organization,Event,Admin]), // Include your entities here
+    TypeOrmModule.forFeature([Learner,Courses,Review,Teacher,Organization,Event,Admin,Video]), // Include your entities here
   ],  
   controllers: [AppController,LearnerController,CourseController,TeacherController,OrganizationController,EventController,AdminController],
   providers: [AppService,LearnerService,CourseService,TeacherService,OrganizationService,EventService,AdminService],

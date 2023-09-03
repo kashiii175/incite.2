@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Courses } from "./courses.entity";
 import { Repository } from "typeorm";
 import { CreateCourseDto } from "./courses.controller";
+import { Video } from "src/videos/videos.entity";
 
 @Injectable()
 export class CourseService {
@@ -11,6 +12,8 @@ export class CourseService {
   constructor(
     @InjectRepository(Courses)
     private courseRepository: Repository <Courses>,
+    @InjectRepository(Video)
+    private videoRepository: Repository <Video>
     ) { }
     
      
@@ -49,7 +52,7 @@ export class CourseService {
       }
       async findOne(id: number) {
         
-        let user= await this.courseRepository.findOne({ where: {id},relations:['learner']})
+        let user= await this.courseRepository.findOne({ where: {id},relations:['learner','videos']})
        
         return user
       }
@@ -60,7 +63,7 @@ export class CourseService {
     
 
       async findAllll(): Promise<Courses[]> {
-        return await this.courseRepository.find({relations:['learner','teacher']});
+        return await this.courseRepository.find({relations:['learner','teacher','videos']});
       }
     
       async countLearnersByCourse(courseId: number): Promise<number> {
@@ -70,4 +73,32 @@ export class CourseService {
           },
         });
       }
-    }
+
+
+      async addVideos(courseId: number, videos: string[]) {
+        const savedVideos = await this.videoRepository.save(videos.map(video => ({ url: video })));
+      
+        const course = await this.courseRepository.findOne({
+          where: { id: courseId },
+          relations: ['videos'], // Make sure to load the 'videos' relation
+        });
+      
+        if (!course) {
+          throw new Error('Course not found');
+        }
+      
+        const video = await this.videoRepository.findOne({
+          where: { url: videos[0] },
+        });
+      
+        if (!video) {
+          throw new Error('Video not found');
+        }
+      
+        course.videos.push(video);
+        await this.courseRepository.save(course);
+      
+        return savedVideos;
+      }
+        }
+    

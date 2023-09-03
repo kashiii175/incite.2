@@ -1,6 +1,7 @@
 
 import { Learner } from 'src/learner/learner.entity';
 import { Teacher } from 'src/teacher/teacher.entity';
+import { Video } from 'src/videos/videos.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany,JoinTable } from 'typeorm';
 
 @Entity()
@@ -14,14 +15,17 @@ export class Courses {
     @Column({ length: 500,nullable: true  })
     rating: string;
 
-    @Column('jsonb', { nullable: true })
-   videos: string[];
+  //   @Column('jsonb', { nullable: true })
+  //  videos: string[];
 
     @Column({ length: 500, nullable: true })
     image: string;
 
    @Column({ nullable: true })
     learnersCount:number;
+
+    @Column({ nullable: true })
+    videoCount:number;
 
     @Column({ length: 500, nullable: true })
     level: string;
@@ -35,6 +39,7 @@ export class Courses {
     teacher: Teacher;
   
   //lsmcl
-
+  @OneToMany(() => Video, (video) => video.course)
+  videos: Video[];
     
 }
