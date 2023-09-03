@@ -68,6 +68,7 @@ if(createeventDto?.image)
   async findOneBy(@Param('id') id: number){
     try{
     let user= await this.eventService.findOne(id);
+    console.log("njn", user)
     if(!user){
       throw new HttpException(`Event not found`, HttpStatus.NOT_FOUND)
     }

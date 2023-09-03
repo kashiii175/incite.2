@@ -1,5 +1,6 @@
 import { Courses } from 'src/Courses/courses.entity';
 import { Review } from 'src/Review/review.entity';
+import { Event } from 'src/event/event.entity';
 
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, PrimaryColumn, OneToMany, ManyToOne, JoinColumn,ManyToMany, JoinTable } from 'typeorm';
 
@@ -34,8 +35,8 @@ export class Organization {
 //   courses: Courses[];
 
 
-  // @OneToMany(() => Review, review => review.learner)
-  // review: Review[];
+  @OneToMany(() => Event, event => event.organization)
+  event: Event[];
 
 
 //kmklmkm
