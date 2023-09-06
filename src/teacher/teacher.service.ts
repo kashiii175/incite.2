@@ -40,7 +40,7 @@ export class TeacherService {
 
     async findOne(id: string) {
       console.log(id)
-      let user= await this.teacherRepository.findOne({ where: {id}})
+      let user= await this.teacherRepository.findOne({ where: {id},relations: ['courses'] })
       return user
     }
 
