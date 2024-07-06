@@ -3,6 +3,7 @@ import { UploadFile } from "src/utils/file-uploading.utils";
 import { CourseService } from "./courses.service";
 import { InvalidRequestValidator } from "src/shared/pipes/invalid-request-validator";
 import { Video } from "src/videos/videos.entity";
+import axios from "axios";
 
 
 export class CreateCourseDto {
@@ -119,4 +120,37 @@ if(createcourseDto?.image)
       message: 'The videos have been added to the course.',
     };
   }
+
+  @Put(':id')
+  @UsePipes(new InvalidRequestValidator())
+  @HttpCode(HttpStatus.OK)
+  async findOneByid(@Param('id') id: number, @Body() bd: any){
+    try{
+    let user= await this.courseService.findOne(id);
+    if(!user){
+      throw new HttpException(`Course not found`, HttpStatus.NOT_FOUND)
+    }
+    let img: string = null
+
+    if (bd?.file)
+    {
+         img=await UploadFile(bd.file);
+    }
+    // Save the updated user entity
+    console.log(img);
+    if(img)
+    {user.image=img
+    }
+    
+    const updatedUser = await this.courseService.save({ ...user, ...bd });
+
+    return {
+      success: true,
+      result: updatedUser,
+    };
+  } catch (e) {
+    this.logger.error(e);
+    throw e;
+  }
+}
 }

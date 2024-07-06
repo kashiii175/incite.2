@@ -33,6 +33,8 @@ export class EventService {
         return user
       }
 
-    
+      async save(user: Partial<Event>): Promise<Event> {
+        return await this.eventRepository.save(user);
+      }
 
     }

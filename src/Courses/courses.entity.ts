@@ -18,7 +18,7 @@ export class Courses {
   //   @Column('jsonb', { nullable: true })
   //  videos: string[];
 
-    @Column({ length: 500, nullable: true })
+    @Column({ length: 1000, nullable: true })
     image: string;
 
    @Column({ nullable: true })
